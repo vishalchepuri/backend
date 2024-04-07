@@ -41,4 +41,4 @@ jobs:
 
       - name: Deploy to AKS
         run: |
-          az kubectl set image deployment/backend-deployment backend=pratsa.azurecr.io/backend:${{ github.sha }}
+          kubectl set image deployment/backend-deployment backend=pratsa.azurecr.io/backend:${{ github.sha }}
