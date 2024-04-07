@@ -13,6 +13,15 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
+      # Install kubectl
+      - name: Install kubectl
+        run: |
+          sudo apt-get update && sudo apt-get install -y apt-transport-https
+          curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key add -
+          echo "deb https://apt.kubernetes.io/ kubernetes-xenial main" | sudo tee -a /etc/apt/sources.list.d/kubernetes.list
+          sudo apt-get update
+          sudo apt-get install -y kubectl
+
       - name: Login to Azure
         uses: azure/login@v1
         with:
@@ -31,14 +40,6 @@ jobs:
 
       - name: Push Docker image
         run: docker push pratsa.azurecr.io/backend:${{ github.sha }}
-
-      - name: Login to Azure AKS
-        uses: azure/aks-set-context@v1
-        with:
-          creds: ${{ secrets.AZURE_CREDENTIALS }}
-          cluster-name: pratsa
-          resource-group: vc9071
-          subscription-id: 3872cb9f-dba2-44b1-9363-93c4398dcd81
 
       - name: Deploy to AKS
         run: |
