@@ -1,22 +1,20 @@
-# Use an official Node.js runtime as the base image
-FROM node:14
+# Use an official Node.js slim runtime as the base image
+FROM node:14-slim
 
 # Set the working directory in the container
 WORKDIR /usr/src/app
 
-# Copy package.json and package-lock.json to the working directory
+# Copy only package.json and package-lock.json to the working directory
 COPY package*.json ./
 
-# Install Node.js dependencies
-RUN npm install
+# Install Node.js dependencies, --production flag to exclude dev dependencies
+RUN npm install --production
 
-# Bundle your app source code inside the Docker image
+# Copy your app source code inside the Docker image
 COPY . .
 
-# Expose the port your app runs on
+# Expose the port your app runs on (optional)
 EXPOSE 3000
 
-
-
 # Define the command to run your app using CMD which defines the default command to run when the container starts
-CMD ["npm", "start"]
+CMD ["node", "app.js"]

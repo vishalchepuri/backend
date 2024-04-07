@@ -21,10 +21,10 @@ jobs:
           password: ${{ secrets.ACR_PASSWORD }}
 
       - name: Build Docker image
-        run: docker build -t your_image_name .
+        run: docker build -t backend .
 
       - name: Tag Docker image
-        run: docker tag your_image_name pratsa.azurecr.io/pratsa:${{ github.sha }}
+        run: docker tag backend pratsa.azurecr.io/backend:${{ github.sha }}
 
       - name: Push Docker image
-        run: docker push pratsa.azurecr.io/pratsa:${{ github.sha }}
+        run: docker push pratsa.azurecr.io/backend:${{ github.sha }}
