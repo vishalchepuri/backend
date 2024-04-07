@@ -13,12 +13,10 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Login to Azure Container Registry
+      - name: Login to Azure
         uses: azure/login@v1
         with:
-          client-id: ${{ secrets.AZURE_CLIENT_ID }}
-          client-secret: ${{ secrets.AZURE_CLIENT_SECRET }}
-          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
 
       - name: Build Docker image
         run: |
@@ -31,9 +29,10 @@ jobs:
       - name: Login to Azure AKS
         uses: azure/aks-set-context@v1
         with:
-          creds: ${{ secrets.AZURE_CLIENT_ID }} ${{ secrets.AZURE_CLIENT_SECRET }} ${{ secrets.AZURE_TENANT_ID }}
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
           cluster-name: pratsa
           resource-group: vc9071
+          subscription-id: <your-subscription-id>
 
       - name: Deploy to AKS
         run: |
