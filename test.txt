@@ -1,0 +1,39 @@
+name: Deploy to AKS
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Login to Azure
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      - name: Build Docker image
+        run: |
+          docker build -t backend .
+          docker tag backend pratsa.azurecr.io/backend:${{ github.sha }}
+
+      - name: Push Docker image
+        run: docker push pratsa.azurecr.io/backend:${{ github.sha }}
+
+      - name: Login to Azure AKS
+        uses: azure/aks-set-context@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+          cluster-name: pratsa
+          resource-group: vc9071
+          subscription-id: 3872cb9f-dba2-44b1-9363-93c4398dcd81
+
+      - name: Deploy to AKS
+        run: |
+          az kubectl set image deployment/backend-deployment backend=pratsa.azurecr.io/backend:${{ github.sha }}

@@ -1,0 +1,23 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: my-nodejs-app
+spec:
+  replicas: 4
+  selector:
+    matchLabels:
+      app: my-nodejs-app
+  template:
+    metadata:
+      labels:
+        app: my-nodejs-app
+    spec:
+      containers:
+        - name: backend
+          image: pratsa.azurecr.io/backend:7ad3ade13df26a7195270eef3764b309337707a5
+          ports:
+            - containerPort: 8080
+          env:
+            - name: NODE_ENV
+              value: production
+          # Add any other configurations here
