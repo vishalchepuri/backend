@@ -13,8 +13,8 @@ RUN npm install --production
 # Copy your app source code inside the Docker image
 COPY . .
 
-# Expose the port your app runs on (optional)
-EXPOSE 3000
+# Expose the port your app runs on
+EXPOSE 8080
 
 # Define the command to run your app using CMD which defines the default command to run when the container starts
 CMD ["node", "app.js"]
