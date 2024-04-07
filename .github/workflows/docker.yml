@@ -16,7 +16,9 @@ jobs:
       - name: Login to Azure Container Registry
         uses: azure/login@v1
         with:
-          creds: ${{ secrets.AZURE_CREDENTIALS }}
+          creds: ${{ secrets.AZURE_CLIENT_ID }}
+          username: ${{ secrets.AZURE_CLIENT_SECRET }}
+          tenant: ${{ secrets.AZURE_TENANT_ID }}
 
       - name: Build Docker image
         run: |
@@ -29,7 +31,9 @@ jobs:
       - name: Login to Azure AKS
         uses: azure/aks-set-context@v1
         with:
-          creds: ${{ secrets.AZURE_CREDENTIALS }}
+          creds: ${{ secrets.AZURE_CLIENT_ID }}
+          password: ${{ secrets.AZURE_CLIENT_SECRET }}
+          tenant: ${{ secrets.AZURE_TENANT_ID }}
           cluster-name: pratsa
           resource-group: vc9071
 
