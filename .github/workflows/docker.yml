@@ -41,4 +41,6 @@ jobs:
 
       - name: Deploy to AKS
         run: |
+          az account set --subscription 3872cb9f-dba2-44b1-9363-93c4398dcd81
+          az aks get-credentials --resource-group vc9071 --name pratsa --overwrite-existing
           kubectl set image deployment/backend-deployment backend=pratsa.azurecr.io/backend:${{ github.sha }}
