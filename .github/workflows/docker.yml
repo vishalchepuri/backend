@@ -16,7 +16,7 @@ jobs:
       - name: Login to Azure Container Registry
         uses: docker/login-action@v1
         with:
-          login-server: pratsa.azurecr.io
+          registry: pratsa.azurecr.io
           username: ${{ secrets.ACR_USERNAME }}
           password: ${{ secrets.ACR_PASSWORD }}
 
@@ -27,4 +27,4 @@ jobs:
         run: docker tag your_image_name pratsa.azurecr.io/pratsa:${{ github.sha }}
 
       - name: Push Docker image
-        run: docker push pratsa.azurecr.io/pratsa.azurecr.io:${{ github.sha }}
+        run: docker push pratsa.azurecr.io/pratsa:${{ github.sha }}
