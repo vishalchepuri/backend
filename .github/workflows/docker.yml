@@ -32,7 +32,7 @@ jobs:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
           cluster-name: pratsa
           resource-group: vc9071
-          subscription-id: <your-subscription-id>
+          subscription-id: 3872cb9f-dba2-44b1-9363-93c4398dcd81
 
       - name: Deploy to AKS
         run: |
