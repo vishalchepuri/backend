@@ -41,7 +41,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 
 const hostname = 'wezeal.me';
-const httpsPort = 443;
+const httpsPort = 3000;
 const errorController = require('./controllers/error');
 const app = express();
 
