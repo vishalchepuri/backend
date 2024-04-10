@@ -57,7 +57,7 @@ app.use(shopRoutes);
 
 app.use(errorController.get404);
 
-// SSL certificate
+// SSL certificates
 const options = {
   cert: fs.readFileSync(path.join(__dirname, './ssl/wezeal_me.crt')),
   ca: fs.readFileSync(path.join(__dirname, './ssl/wezeal_me.ca-bundle')),
