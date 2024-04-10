@@ -65,5 +65,5 @@ app.use(shopRoutes);
 
 app.use(errorController.get404);
 
-const httpsServer = https.crogteServer(httpsOptions, app);
+const httpsServer = https.createServer(httpsOptions, app);
 httpsServer.listen(httpsPort, hostname)
