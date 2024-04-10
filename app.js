@@ -33,23 +33,15 @@
 // ------new code
 
 
-
 const path = require('path');
 const fs = require('fs');
 const https = require('https');
 const express = require('express');
 const bodyParser = require('body-parser');
 
-const hostname = 'wezeal.me';
-const httpsPort = 443;
 const errorController = require('./controllers/error');
-const app = express();
 
-const httpsOptions = {
-    cert: fs.readFileSync('./ssl/wezeal_me.crt'),
-    ca: fs.readFileSync('./ssl/wezeal_me.ca-bundle'), 
-    key: fs. readFileSync('./ssl/wezeal_me.key')
-}
+const app = express();
 
 app.set('view engine', 'ejs');
 app.set('views', 'views');
@@ -65,5 +57,11 @@ app.use(shopRoutes);
 
 app.use(errorController.get404);
 
-const httpsServer = https.createServer(httpsOptions, app);
-httpsServer.listen(httpsPort, hostname)
+// SSL certificate
+const options = {
+  cert: fs.readFileSync(path.join(__dirname, './ssl/wezeal_me.crt')),
+  ca: fs.readFileSync(path.join(__dirname, './ssl/wezeal_me.ca-bundle')),
+  key: fs.readFileSync(path.join(__dirname, './ssl/wezeal_me.key')),
+};
+
+https.createServer(options, app).listen(443);
