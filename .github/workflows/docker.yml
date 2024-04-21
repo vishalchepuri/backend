@@ -33,14 +33,14 @@ jobs:
       - name: Build Docker image
         run: |
           docker build -t backend .
-          docker tag backend ${{ ACR_NAME }}/backend:${{ github.sha }}
+          docker tag backend ${{ secrets.ACR_NAME }}/backend:${{ github.sha }}
 
       - name: Push Docker image
-        run: docker push ${{ ACR_NAME }/backend:${{ github.sha }}
+        run: docker push ${{ secrets.ACR_NAME }/backend:${{ github.sha }}
 
       - name: Deploy to AKS
         run: |
           az account set --subscription ${{ secrets.AZURE_SUBSCRIPTION }}
           az aks get-credentials --resource-group vc9071 --name pratsa --overwrite-existing
-          kubectl set image deployment/my-nodejs-app backend=${{ ACR_NAME }}/backend:${{ github.sha }}
+          kubectl set image deployment/my-nodejs-app backend=${{ secrets.ACR_NAME }}/backend:${{ github.sha }}
 
