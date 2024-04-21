@@ -7,6 +7,6 @@ spec:
     app: my-nodejs-app
   ports:
     - protocol: TCP
-      port: 80  # Port on which the service will be exposed
-      targetPort: 8080  # Port on which your Node.js application is running inside the container
-  type: LoadBalancer  # Change this to NodePort or ClusterIP if needed
+      port: 80  
+      targetPort: 8080 
+  type: LoadBalancer 
