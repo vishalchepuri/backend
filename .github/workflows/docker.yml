@@ -4,6 +4,12 @@ on:
   push:
     branches:
       - main
+    workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version'     
+        required: true
+        default: 'latest'
 
 jobs:
   deploy:
@@ -37,10 +43,15 @@ jobs:
 
       - name: Push Docker image
         run: docker push ${{ secrets.ACR_NAME }}/backend:${{ github.sha }}
+      
+      - name: Docker build and push
+        run: |
+          docker build -t backend .
+          docker tag backend ${{ secrets.ACR_NAME }}/backend:${{ github.event.inputs.version }}
+          docker push ${{ secrets.ACR_NAME }}/backend:${{ github.event.inputs.version }}
 
       - name: Deploy to AKS
         run: |
           az account set --subscription ${{ secrets.AZURE_SUBSCRIPTION }}
           az aks get-credentials --resource-group vc9071 --name pratsa --overwrite-existing
           kubectl set image deployment/my-nodejs-app backend=${{ secrets.ACR_NAME }}/backend:${{ github.sha }}
-
