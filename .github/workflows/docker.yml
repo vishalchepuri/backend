@@ -54,4 +54,4 @@ jobs:
         run: |
           az account set --subscription ${{ secrets.AZURE_SUBSCRIPTION }}
           az aks get-credentials --resource-group vc9071 --name pratsa --overwrite-existing
-          kubectl set image deployment/my-nodejs-app backend=${{ secrets.ACR_NAME }}/backend:${{ github.sha }}
+          kubectl set image deployment/my-nodejs-app backend=${{ secrets.ACR_NAME }}/backend:${{ github.event.inputs.version }}
