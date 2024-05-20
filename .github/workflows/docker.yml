@@ -36,13 +36,13 @@ jobs:
       - name: Azure CLI ACR Login
         run: az acr login --name pratsa
 
-      - name: Build Docker image
-        run: |
-          docker build -t backend .
-          docker tag backend ${{ secrets.ACR_NAME }}/backend:${{ github.sha }}
+      # - name: Build Docker image
+      #   run: |
+      #     docker build -t backend .
+      #     docker tag backend ${{ secrets.ACR_NAME }}/backend:${{ github.sha }}
 
-      - name: Push Docker image
-        run: docker push ${{ secrets.ACR_NAME }}/backend:${{ github.sha }}
+      # - name: Push Docker image
+      #   run: docker push ${{ secrets.ACR_NAME }}/backend:${{ github.sha }}
       
       - name: Docker build and push
         run: |
