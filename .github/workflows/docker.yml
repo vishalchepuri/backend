@@ -33,8 +33,8 @@ jobs:
       - name: Azure CLI Login
         run: az login --service-principal -u ${{ secrets.AZURE_CLIENT_ID }} -p ${{ secrets.AZURE_CLIENT_SECRET }} --tenant ${{ secrets.AZURE_TENANT_ID }}
 
-      - name: Azure CLI ACR Login
-        run: az acr login --name pratsa
+      # - name: Azure CLI ACR Login
+      #   run: az acr login --name pratsa
 
       # - name: Build Docker image
       #   run: |
@@ -44,14 +44,34 @@ jobs:
       # - name: Push Docker image
       #   run: docker push ${{ secrets.ACR_NAME }}/backend:${{ github.sha }}
       
-      - name: Docker build and push
+      # - name: Docker build and push
+      #   run: |
+      #     docker build -t backend .
+      #     docker tag backend ${{ secrets.ACR_NAME }}/backend:${{ github.event.inputs.version }}
+      #     docker push ${{ secrets.ACR_NAME }}/backend:${{ github.event.inputs.version }}
+
+      # - name: Deploy to AKS
+      #   run: |
+      #     az account set --subscription ${{ secrets.AZURE_SUBSCRIPTION }}
+      #     az aks get-credentials --resource-group vc9071 --name pratsa --overwrite-existing
+      #     kubectl set image deployment/my-nodejs-app backend=${{ secrets.ACR_NAME }}/backend:${{ github.event.inputs.version }}
+
+          
+      - name: JFrog CLI configuration
+        run: |
+          curl -fL https://getcli.jfrog.io | sh
+          ./jfrog rt config --url ${{ secrets.JF_URL }} --access-token ${{ secrets.JF_ACCESS_TOKEN }}
+
+      
+      - name: Docker build and push to JFrog
         run: |
           docker build -t backend .
-          docker tag backend ${{ secrets.ACR_NAME }}/backend:${{ github.event.inputs.version }}
-          docker push ${{ secrets.ACR_NAME }}/backend:${{ github.event.inputs.version }}
+          docker tag backend zesttest.jfrog.io/backend-docker-local/backend:${{ github.event.inputs.version }}
+          docker push zesttest.jfrog.io/backend-docker-local/backend:${{ github.event.inputs.version }}
 
+      
       - name: Deploy to AKS
         run: |
           az account set --subscription ${{ secrets.AZURE_SUBSCRIPTION }}
           az aks get-credentials --resource-group vc9071 --name pratsa --overwrite-existing
-          kubectl set image deployment/my-nodejs-app backend=${{ secrets.ACR_NAME }}/backend:${{ github.event.inputs.version }}
+          kubectl set image deployment/my-nodejs-app backend=zesttest.jfrog.io/backend-docker-local/backend:${{ github.event.inputs.version }}
