@@ -62,14 +62,12 @@ jobs:
           curl -fL https://getcli.jfrog.io | sh
           ./jfrog rt config --url ${{ secrets.JF_URL }} --access-token ${{ secrets.JF_ACCESS_TOKEN }}
 
-      
       - name: Docker build and push to JFrog
         run: |
           docker build -t backend .
           docker tag backend zesttest.jfrog.io/backend-docker-local/backend:${{ github.event.inputs.version }}
           docker push zesttest.jfrog.io/backend-docker-local/backend:${{ github.event.inputs.version }}
 
-      
       - name: Deploy to AKS
         run: |
           az account set --subscription ${{ secrets.AZURE_SUBSCRIPTION }}
