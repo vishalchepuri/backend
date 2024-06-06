@@ -44,3 +44,4 @@
             az aks get-credentials --resource-group wezeal --name wezeal-aks --overwrite-existing
             kubectl set image deployment/wezeal-app wezeal=${{ secrets.ACR_NAME }}/wezeal:${{ github.sha }}
 
+
