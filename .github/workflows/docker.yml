@@ -1,75 +1,46 @@
-name: Deploy to AKS
+  name: Deploy to AKS
 
-on:
-  push:
-    branches:
-      - main
-  workflow_dispatch:
-    inputs:
-      version:
-        description: 'Version'     
-        required: true
-        default: 'latest'
+  on:
+    push:
+      branches:
+        - main
 
-jobs:
-  deploy:
-    runs-on: ubuntu-latest
+  jobs:
+    deploy:
+      runs-on: ubuntu-latest
 
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
+      steps:
+        - name: Checkout code
+          uses: actions/checkout@v2
 
-      - name: Install kubectl
-        run: |
-          curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
-          chmod +x kubectl
-          sudo mv kubectl /usr/local/bin/
+        - name: Install kubectl
+          run: |
+            curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
+            chmod +x kubectl
+            sudo mv kubectl /usr/local/bin/
 
-      - name: Login to Azure
-        uses: azure/login@v1
-        with:
-          creds: ${{ secrets.AZURE_CREDENTIALS }}
+        - name: Login to Azure
+          uses: azure/login@v1
+          with:
+            creds: ${{ secrets.AZURE_CREDENTIALS }}
 
-      - name: Azure CLI Login
-        run: az login --service-principal -u ${{ secrets.AZURE_CLIENT_ID }} -p ${{ secrets.AZURE_CLIENT_SECRET }} --tenant ${{ secrets.AZURE_TENANT_ID }}
+        - name: Azure CLI Login
+          run: az login --service-principal -u ${{ secrets.AZURE_CLIENT_ID }} -p ${{ secrets.AZURE_CLIENT_SECRET }} --tenant ${{ secrets.AZURE_TENANT_ID }}
 
-      # - name: Azure CLI ACR Login
-      #   run: az acr login --name pratsa
+        - name: Azure CLI ACR Login
+          run: az acr login --name wezeal
 
-      # - name: Build Docker image
-      #   run: |
-      #     docker build -t backend .
-      #     docker tag backend ${{ secrets.ACR_NAME }}/backend:${{ github.sha }}
+        - name: Build Docker image
+          run: |
+            docker build -t wezeal .
+            docker tag wezeal ${{ secrets.ACR_NAME }}/wezeal:${{ github.sha }}
 
-      # - name: Push Docker image
-      #   run: docker push ${{ secrets.ACR_NAME }}/backend:${{ github.sha }}
-      
-      # - name: Docker build and push
-      #   run: |
-      #     docker build -t backend .
-      #     docker tag backend ${{ secrets.ACR_NAME }}/backend:${{ github.event.inputs.version }}
-      #     docker push ${{ secrets.ACR_NAME }}/backend:${{ github.event.inputs.version }}
+        - name: Push Docker image
+          run: docker push ${{ secrets.ACR_NAME }}/wezeal:${{ github.sha }}
 
-      # - name: Deploy to AKS
-      #   run: |
-      #     az account set --subscription ${{ secrets.AZURE_SUBSCRIPTION }}
-      #     az aks get-credentials --resource-group vc9071 --name pratsa --overwrite-existing
-      #     kubectl set image deployment/my-nodejs-app backend=${{ secrets.ACR_NAME }}/backend:${{ github.event.inputs.version }}
+        - name: Deploy to AKS
+          run: |
+            az account set --subscription ${{ secrets.AZURE_SUBSCRIPTION }}
+            az aks get-credentials --resource-group wezeal --name wezeal-aks --overwrite-existing
+            kubectl set image deployment/wezeal-app wezeal=${{ secrets.ACR_NAME }}/wezeal:${{ github.sha }}
 
-          
-      - name: JFrog CLI configuration
-        run: |
-          curl -fL https://getcli.jfrog.io | sh
-          ./jfrog rt config --url ${{ secrets.JF_URL }} --access-token ${{ secrets.JF_ACCESS_TOKEN }}
-
-      - name: Docker build and push to JFrog
-        run: |
-          docker build -t backend .
-          docker tag backend zesttest.jfrog.io/backend-docker-local/backend:${{ github.event.inputs.version }}
-          docker push zesttest.jfrog.io/backend-docker-local/backend:${{ github.event.inputs.version }}
-
-      - name: Deploy to AKS
-        run: |
-          az account set --subscription ${{ secrets.AZURE_SUBSCRIPTION }}
-          az aks get-credentials --resource-group vc9071 --name pratsa --overwrite-existing
-          kubectl set image deployment/my-nodejs-app backend=zesttest.jfrog.io/backend-docker-local/backend:${{ github.event.inputs.version }}
