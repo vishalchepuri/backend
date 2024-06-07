@@ -10,7 +10,7 @@ on:
         description: 'Version'     
         required: true
         default: 'latest'
-		
+	
 jobs:
     deploy:
       runs-on: ubuntu-latest
