@@ -42,6 +42,7 @@ jobs:
 
         - name: Push Docker image
           run: docker push ${{ secrets.ACR_NAME }}/wezeal:${{ github.event.inputs.version }}
+          
 
         - name: Deploy to AKS
           run: |
