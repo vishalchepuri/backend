@@ -1,9 +1,6 @@
-name: Deploy to AKS
+name: CICD
 
 on:
-  push:
-    branches:
-      - main
   workflow_dispatch:
     inputs:
       version:
@@ -23,7 +20,6 @@ jobs:
             curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
             chmod +x kubectl
             sudo mv kubectl /usr/local/bin/
-
         - name: Login to Azure
           uses: azure/login@v1
           with:
@@ -39,7 +35,6 @@ jobs:
           run: |
             docker build -t wezeal .
             docker tag wezeal ${{ secrets.ACR_NAME }}/wezeal:${{ github.event.inputs.version }}
-
         - name: Push Docker image
           run: docker push ${{ secrets.ACR_NAME }}/wezeal:${{ github.event.inputs.version }}
           
