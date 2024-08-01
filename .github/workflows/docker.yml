@@ -34,9 +34,9 @@ jobs:
         - name: Build Docker image
           run: |
             docker build -t wezeal .
-            docker tag wezeal ${{ secrets.ACR_NAME }}/wezeal:${{ github.event.inputs.version }}
+            docker tag wezeal ${{ secrets.ACR_NAME }}.azurecr.io/wezeal:${{ github.event.inputs.version }}
         - name: Push Docker image
-          run: docker push ${{ secrets.ACR_NAME }}/wezeal:${{ github.event.inputs.version }}
+          run: docker push ${{ secrets.ACR_NAME }}.azurecr.io/wezeal:${{ github.event.inputs.version }}
           
 
         - name: Deploy to AKS
