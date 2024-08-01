@@ -43,4 +43,4 @@ jobs:
           run: |
             az account set --subscription ${{ secrets.AZURE_SUBSCRIPTION }}
             az aks get-credentials --resource-group wezeal --name wezealaks --overwrite-existing
-            kubectl set image deployment/my-nodejs-app wezeal=${{ secrets.ACR_NAME }}.azurecr.io/wezeal:${{ github.event.inputs.version }}
+            kubectl set image deployment/my-nodejs-app backend=${{ secrets.ACR_NAME }}.azurecr.io/wezeal:${{ github.event.inputs.version }}
